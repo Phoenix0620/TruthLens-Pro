@@ -1,0 +1,33 @@
+# Environments
+node_modules/
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Models and Data
+models/
+data/
+*.tsv
+*.csv
+*.pkl
+*.bin
+*.pt
+
+# Streamlit
+.streamlit/secrets.toml
+
+# IDEs and Tools
+.vscode/
+.idea/
+*.swp
+.DS_Store
