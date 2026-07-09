@@ -111,19 +111,18 @@ Ensure you have Python 3.10+ installed.
 
 ---
 
-## ☁️ Deploying to Streamlit Community Cloud
+## ☁️ Streamlit Community Cloud Deployment
 
-TruthLens Pro is fully prepped for direct cloud deployment:
+TruthLens Pro is live and deployed on Streamlit Community Cloud! You can access the live fact-checking platform directly here:
 
-1. Push this project to your GitHub repository.
-2. Go to [share.streamlit.io](https://share.streamlit.io/) and log in with your GitHub account.
-3. Click **New App**, select your repository, branch, and specify `app.py` as the entry file.
-4. Streamlit Cloud will automatically detect `requirements.txt` and install all required modules.
-
-> [!TIP]
-> Make sure to add any required API keys (e.g., if you hook up custom LLM judges or advanced search proxies) in the Streamlit **Secrets** configuration panel on the dashboard.
+👉 **[TruthLens Pro Live Web App](https://truthlens-pro-5rgp4mv26bn5sbappaxyrgp.streamlit.app/)**
 
 ---
 
 ## 🛡️ License
 Distributed under the MIT License. See `LICENSE` for more information.
+
+---
+
+### ❤️ A Friendly Note
+Thank you for checking out TruthLens Pro! This platform was built to demonstrate the power of combining semantic Vector RAG with real-time web scrapers and explainable AI models to fight online misinformation. If you have any feedback or want to collaborate, feel free to reach out. Stay curious and seek the truth!
