@@ -13,3 +13,11 @@ sentence-transformers>=5.2.2
 ddgs>=9.10.0
 duckduckgo-search>=8.1.1
 scikit-learn>=1.6.0
+spacy>=3.8.5
+https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0.tar.gz
+python-whois>=0.9.6
+tldextract>=5.3.1
+rake-nltk>=1.0.6
+nltk>=3.9.1
+datasets>=4.5.0
+beautifulsoup4>=4.13.3
