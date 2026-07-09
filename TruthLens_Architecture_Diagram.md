@@ -1,72 +1,57 @@
-# TruthLens Pro: System Architecture Block Diagram
+# TruthLens Pro Architecture (Updated 2026)
 
-Below is the Mermaid-js block diagram detailing the hybrid pipeline of the TruthLens Pro fact-checking system. 
-
-If your markdown viewer supports Mermaid (like GitHub, GitLab, or VS Code), it will render automatically. You can also copy the code block below and paste it into [Mermaid Live Editor](https://mermaid.live/) to generate a high-quality PNG or SVG image.
+This diagram reflects the latest hybrid architecture incorporating the 80/20 Ensemble Math, Softmax NLI Leaning, High-Credibility Syntactic Bypass, and the Fake-News-BERT Fallback logic.
 
 ```mermaid
-flowchart TD
-    %% Styling
-    classDef user fill:#6366f1,stroke:#4f46e5,stroke-width:2px,color:#fff,font-weight:bold
-    classDef engine fill:#334155,stroke:#94a3b8,stroke-width:2px,color:#fff
-    classDef api fill:#0ea5e9,stroke:#0284c7,stroke-width:2px,color:#fff
-    classDef logic fill:#10b981,stroke:#059669,stroke-width:2px,color:#fff
-    classDef output fill:#f43f5e,stroke:#e11d48,stroke-width:2px,color:#fff
-    classDef db fill:#8b5cf6,stroke:#7c3aed,stroke-width:2px,color:#fff
+graph TD
+    %% Define Node Styles
+    classDef input fill:#6366f1,stroke:#4f46e5,stroke-width:2px,color:#fff,font-weight:bold,rx:10,ry:10;
+    classDef pathway fill:#1e293b,stroke:#334155,stroke-width:2px,color:#fff,font-weight:bold,rx:5,ry:5;
+    classDef engine fill:#3b82f6,stroke:#2563eb,stroke-width:2px,color:#fff,rx:5,ry:5;
+    classDef model fill:#10b981,stroke:#059669,stroke-width:2px,color:#fff,rx:5,ry:5;
+    classDef logic fill:#f59e0b,stroke:#d97706,stroke-width:2px,color:#fff,rx:20,ry:20;
+    classDef db fill:#8b5cf6,stroke:#7c3aed,stroke-width:2px,color:#fff,rx:5,ry:5;
+    classDef final fill:#ef4444,stroke:#dc2626,stroke-width:3px,color:#fff,font-weight:bold,rx:10,ry:10;
 
-    %% Nodes
-    User(("👤 User Input (Claim)")):::user
+    %% Entry Point
+    User([User Input: Text Claim]):::input --> Orchy{Truth Orchestrator}:::pathway
     
-    %% RAG Pathway
-    RAG["🏛️ RAG Ground Truth Engine\n(sentence-transformers + FAISS)"]:::engine
-    Dataset[("LIAR Dataset\n(12,000+ Verified Statements)")]:::db
-    RAGMatch{"Match > 80%?"}:::logic
+    %% RAG Pathway (Left)
+    Orchy --> |Parallel Execution 1| RAG[RAG Ground Truth Engine]:::engine
+    RAG --> LIAR[(LIAR Benchmark DB)]:::db
+    LIAR --> RAG_Check{Match > 80%?}:::logic
+    RAG_Check -- Yes --> FinalOutput
     
-    %% Web Pathway
-    QueryGen["🧠 Autonomous Query Planner\n(spaCy + RAKE-NLTK)"]:::engine
-    DuckDuckGo(("DuckDuckGo Search API\n(Live Web Scraping)")):::api
+    %% Web Search Pathway (Center)
+    RAG_Check -- No --> QP[Autonomous Query Planner]:::engine
+    Orchy --> |Parallel Execution 2| QP
+    QP --> DDGS[(DDGS Live Search)]:::db
+    DDGS --> NLI[Web Validator]:::engine
     
-    Credibility["🛡️ Credibility Engine\n(python-whois Domain Profiling)"]:::engine
-    WhoisDB[("Known Domain Whitelist/Blacklist\n+ Live Server Ping")]:::db
+    %% NLI Sub-logic
+    NLI --> Softmax[CrossEncoder Softmax]:::model
+    Softmax --> CredEngine[Credibility Profiler]:::engine
+    CredEngine --> |"Known Domain Whitelist"| LogicOverride{Credibility >= 3\n& Contradict < 0.2?}:::logic
     
-    NLI["🔍 NLI Verification\n(cross-encoder/nli-distilroberta-base)"]:::engine
+    LogicOverride -- Yes --> Support[Force 'Supports' Stance]:::model
+    LogicOverride -- No --> SemLean[Semantic Leaning Ratio\n(Entail vs Contradict)]:::logic
     
-    Consensus{"Credibility-Weighted\nConsensus"}:::logic
+    SemLean --> AggWeb[Aggregate Web Truth Score]:::engine
+    Support --> AggWeb
     
-    %% Linguistic Pathway
-    Linguistic["📝 Linguistic Style Analyzer\n(DistilBERT / Zero-Shot BART)"]:::engine
-    Fallback{"Fallback Needed?"}:::logic
-
-    %% Output
-    Verdict[["📊 Final Output / UI Dashboard\n(Streamlit orchestrator)"]]:::output
-
-    %% Flow
-    User --> RAG
-    User --> QueryGen
-    User --> Linguistic
+    %% Linguistic Pathway (Right)
+    Orchy --> |Parallel Execution 3| Ling[Linguistic Stylometry]:::engine
+    Ling --> LocalModel{Load Custom\nFinetuned DistilBERT}:::logic
     
-    %% RAG Logic
-    Dataset <--> RAG
-    RAG --> |Vector Search| RAGMatch
+    LocalModel -- Available --> SHAP[SHAP Token XAI Module]:::model
+    LocalModel -- Failed/Missing --> Fallback[Fallback to HF\nFake-News-Bert-Detect]:::model
+    Fallback --> SHAP
+    SHAP --> AggLing[Linguistic Truth Score]:::engine
     
-    %% Web Logic
-    QueryGen --> |Extract Entities & Keywords| DuckDuckGo
-    DuckDuckGo --> |Return Live Articles| NLI
-    DuckDuckGo --> |Return URLs| Credibility
-    WhoisDB <--> Credibility
+    %% Ensemble Fusion (Bottom)
+    AggWeb --> |80% Weight| Ensemble{Mathematical Fusion}:::pathway
+    AggLing --> |20% Weight| Ensemble
     
-    User --> |Compare input to Live Articles| NLI
-    
-    NLI --> |Entailment / Neutral / Contradict| Consensus
-    Credibility --> |Domain Trust Score multiplier| Consensus
-    
-    %% Aggregation
-    RAGMatch --> |Yes| Verdict
-    RAGMatch --> |No| Fallback
-    
-    Consensus --> |Valid Web Evidence Found| Verdict
-    Consensus --> |No Web Evidence Found| Fallback
-    
-    Fallback --> |Yes| Linguistic
-    Linguistic --> |Analyze Semantic Deception| Verdict
+    Ensemble --> Scaling[Outward Neutrality Scaling]:::logic
+    Scaling --> FinalOutput[[Final Verdict Evaluated\nLikely True / False / Contested]]:::final
 ```

@@ -1,11 +1,11 @@
 import sys
 import os
-sys.path.append(os.path.abspath(os.path.dirname(__file__)))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from core.web_validator import WebValidator
 from core.query_planner import QueryPlanner
 
-claim = "Drinking hot water every 15 minutes can kill the COVID-19 virus inside your body."
+claim = "NFL receiver Rondale Moore found dead in his Indiana hometown"
 
 planner = QueryPlanner()
 queries = planner.generate_queries(claim)
@@ -23,3 +23,4 @@ for detail in res['details']:
     print(f"URL: {detail['url']}")
     print(f"Relation: {detail['relation']}")
     print(f"Weight: {detail['weight']}")
+    print(f"Raw NLI Probs: {detail.get('raw_probs', 'Not stored')}")

@@ -1,6 +1,6 @@
 import sys
 import os
-sys.path.append(os.path.abspath(os.path.dirname(__file__)))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from core.orchestrator import TruthOrchestrator
 
@@ -34,6 +34,10 @@ print("Initializing Orchestrator...")
 orchestrator = TruthOrchestrator()
 
 correct_count = 0
+tp = 0
+tn = 0
+fp = 0
+fn = 0
 total = len(test_claims)
 
 print("Running 20 Test Claims...\n")
@@ -51,9 +55,25 @@ for claim, expected_truth in test_claims:
     status = "✅ PASS" if actual_truth == expected_truth else "❌ FAIL"
     if actual_truth == expected_truth:
         correct_count += 1
-        
+        if actual_truth is True:
+            tp += 1
+        else:
+            tn += 1
+    else:
+        if actual_truth is True:
+            fp += 1
+        else:
+            fn += 1
+            
     print(f"Claim: {claim}")
     print(f"Expected: {expected_truth} | Actual Verdict: {verdict_text} ({res['confidence_percent']}%) [{res['primary_source']}]")
     print(f"Status: {status}\n")
 
+precision = tp / (tp + fp) if (tp + fp) > 0 else 0
+recall = tp / (tp + fn) if (tp + fn) > 0 else 0
+f1 = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0
+
 print(f"Accuracy: {correct_count}/{total} ({(correct_count/total)*100}%)")
+print(f"Precision: {precision:.4f}")
+print(f"Recall: {recall:.4f}")
+print(f"F1 Score: {f1:.4f}")

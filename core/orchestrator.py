@@ -53,11 +53,21 @@ class TruthOrchestrator:
             
             if web_verdict == "Unverified":
                  # RAG was weak, Web was Unverified. 
-                 # Linguistic can only contribute 20% MAX.
-                 ensemble_conf = ling_truth_score * ling_weight
-                 verdict = "Unsupported (No Factual Evidence Found)"
-                 confidence = int(ensemble_conf * 100)
-                 source = "Ensemble: Web Failed, Linguistic Cap Hit"
+                 
+                 # --- CLICKBAIT OVERRIDE ---
+                 # If the text is overwhelmingly deceptive/clickbait (>85% false confidence)
+                 # AND the claim is long enough for linguistic patterns to be reliable
+                 word_count = len(claim.split())
+                 if ling_truth_score < 0.15 and word_count > 5:
+                     verdict = "Likely False (Linguistic Override)"
+                     confidence = int((1.0 - ling_truth_score) * 100)
+                     source = "Linguistic Pattern Matching (High Deception)"
+                 else:
+                     # Linguistic can only contribute 20% MAX.
+                     ensemble_conf = ling_truth_score * ling_weight
+                     verdict = "Unsupported (No Factual Evidence Found)"
+                     confidence = int(ensemble_conf * 100)
+                     source = "Ensemble: Web Failed, Linguistic Cap Hit"
             else:
                  # Web Evidence exists
                  if "False" in web_verdict:
@@ -82,8 +92,16 @@ class TruthOrchestrator:
                      verdict = "Likely False (Ensemble)"
                      confidence = int((1.0 - ensemble_truth_score) * 100)
                  else:
-                     verdict = "Contested (Ensemble)"
-                     confidence = int(max(ensemble_truth_score, 1.0 - ensemble_truth_score) * 100)
+                     # --- CLICKBAIT OVERRIDE ---
+                     # Contested zone. If Web is mixed but language is highly deceptive:
+                     word_count = len(claim.split())
+                     if ling_truth_score < 0.15 and word_count > 5: 
+                         verdict = "Likely False (Linguistic Override)"
+                         confidence = int((1.0 - ling_truth_score) * 100)
+                         source = "Live Web (Inconclusive) + Linguistic Pattern (High Deception)"
+                     else:
+                         verdict = "Contested (Ensemble)"
+                         confidence = int(max(ensemble_truth_score, 1.0 - ensemble_truth_score) * 100)
                  
                  source = f"Live Web (80%) + Linguistic Tone (20%)"
 

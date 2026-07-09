@@ -23,138 +23,121 @@ st.set_page_config(
 # Dark Mode Premium CSS
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&family=Inter:wght@400;500;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
     
-    body { font-family: 'Inter', sans-serif; background-color: #020617; color: #f8fafc; }
+    /* Base */
+    body { font-family: 'Inter', sans-serif; background-color: #000000; color: #ffffff; }
+    .stApp { background: #000000; }
     
-    /* Animated Gradient Background */
-    .stApp { 
-        background: linear-gradient(-45deg, #0f172a, #1e1b4b, #09090b, #170f2e);
-        background-size: 400% 400%;
-        animation: gradientBG 15s ease infinite;
-    }
-    
-    @keyframes gradientBG {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
-    }
+    /* Hide Streamlit Header & Navigation */
+    header[data-testid="stHeader"] { visibility: hidden !important; }
+    .stDeployButton { display: none !important; }
+    footer { visibility: hidden !important; }
 
-    /* Mesmerizing Text Styling */
+    /* Layout Spacing */
+    .block-container { padding-top: 2rem !important; padding-bottom: 2rem !important; max-width: 1500px !important; }
+
+    /* Sticky Left Content for Scrolling */
+    [data-testid="stColumn"]:nth-of-type(1), [data-testid="column"]:nth-of-type(1) {
+        position: sticky !important;
+        top: 2rem !important;
+        align-self: flex-start !important;
+        z-index: 100 !important;
+    }
+    
+    /* Minimalist Typography */
     .title-text { 
-        font-family: 'Outfit', sans-serif;
-        font-size: 4.5rem; font-weight: 900; text-align: center; 
-        background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
-        -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
-        margin-bottom: 0.2rem;
-        letter-spacing: -0.03em;
-        text-shadow: 0px 4px 30px rgba(79, 172, 254, 0.4);
-        animation: float 6s ease-in-out infinite;
+        font-family: 'Inter', sans-serif;
+        font-size: 3.5rem; font-weight: 900; text-align: left; 
+        color: #ffffff;
+        letter-spacing: -0.05em;
+        margin-bottom: 0px;
+        line-height: 1;
     }
     
-    @keyframes float {
-        0% { transform: translateY(0px); }
-        50% { transform: translateY(-5px); }
-        100% { transform: translateY(0px); }
-    }
-
     .subtitle-text { 
-        font-family: 'Outfit', sans-serif;
-        text-align: center; color: #94a3b8; font-size: 1.25rem; margin-bottom: 3rem; 
-        font-weight: 300; letter-spacing: 0.1em; text-transform: uppercase;
+        font-family: 'Inter', sans-serif;
+        text-align: left; color: #888888; font-size: 1rem; margin-top: 8px; margin-bottom: 2rem; 
+        font-weight: 400; letter-spacing: -0.01em; 
     }
     
-    /* Premium Glassmorphism Cards */
+    /* Stark Minimalist Cards */
     .card {
-        background: rgba(15, 23, 42, 0.45); 
-        backdrop-filter: blur(24px); 
-        -webkit-backdrop-filter: blur(24px);
-        border-radius: 24px;
-        padding: 32px; 
-        border: 1px solid rgba(255, 255, 255, 0.05); 
-        border-top: 1px solid rgba(255, 255, 255, 0.15);
-        border-left: 1px solid rgba(255, 255, 255, 0.15);
-        box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.4);
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        margin-bottom: 1.5rem;
-        overflow: hidden;
-        position: relative;
+        background: transparent; 
+        padding: 16px 0; 
+        border: none; 
+        border-top: 1px solid #222222;
+        border-radius: 0px; 
+        margin-bottom: 1rem;
     }
     
-    .card::before {
-        content: "";
-        position: absolute;
-        top: 0; left: -100%;
-        width: 50%; height: 100%;
-        background: linear-gradient(to right, transparent, rgba(255,255,255,0.03), transparent);
-        transform: skewX(-25deg);
-        transition: 0.5s;
-    }
-    
-    .card:hover::before {
-        left: 150%;
-    }
-
-    .card:hover { 
-        transform: translateY(-8px) scale(1.02); 
-        box-shadow: 0 20px 50px -10px rgba(56, 189, 248, 0.3); 
-        border-color: rgba(56, 189, 248, 0.5); 
-    }
-    
-    /* Glowing Verdict Box */
+    /* Sharp Verdict Box */
     .verdict { 
-        font-family: 'Outfit', sans-serif;
-        font-size: 2.5rem; font-weight: 900; text-align: center; 
-        padding: 24px; border-radius: 16px; margin: 30px 0; 
-        letter-spacing: 0.05em; text-transform: uppercase;
-        animation: pulseglow 2s infinite alternate;
+        font-family: 'Inter', sans-serif;
+        font-size: 2rem; font-weight: 800; text-align: left; 
+        padding: 16px; border-radius: 0px; margin: 20px 0; 
+        letter-spacing: -0.02em; text-transform: uppercase;
+        border-left: 6px solid;
+        background: #050505;
+        border-top: 1px solid #111;
+        border-right: 1px solid #111;
+        border-bottom: 1px solid #111;
     }
     
-    @keyframes pulseglow {
-        from { box-shadow: 0 0 10px -5px currentColor; }
-        to { box-shadow: 0 0 30px 5px currentColor; }
-    }
+    .verdict-True { border-left-color: #22c55e; color: #ffffff; }
+    .verdict-True span { color: #22c55e !important; }
+    .verdict-False { border-left-color: #ef4444; color: #ffffff; }
+    .verdict-False span { color: #ef4444 !important; }
+    .verdict-Neutral { border-left-color: #eab308; color: #ffffff; }
+    .verdict-Neutral span { color: #eab308 !important; }
     
-    .verdict-True { background: rgba(34, 197, 94, 0.08); border: 2px solid #22c55e; color: #4ade80; }
-    .verdict-False { background: rgba(239, 68, 68, 0.08); border: 2px solid #ef4444; color: #f87171; }
-    .verdict-Neutral { background: rgba(234, 179, 8, 0.08); border: 2px solid #eab308; color: #facc15; }
-    
-    /* Soft Inputs */
+    /* Stark Inputs */
     .stTextArea textarea { 
-        background: rgba(0, 0, 0, 0.4) !important; 
-        color: #f8fafc !important; 
-        border: 1px solid rgba(255,255,255,0.1) !important; 
-        border-radius: 16px; 
-        font-size: 1.15rem;
-        padding: 20px;
-        transition: all 0.3s ease;
+        background: #000000 !important; 
+        color: #ffffff !important; 
+        border: 1px solid #333333 !important; 
+        border-radius: 0px !important; 
+        font-size: 1rem;
+        padding: 16px;
     }
     .stTextArea textarea:focus {
-        border-color: #38bdf8 !important;
-        box-shadow: inset 0 0 0 1px #38bdf8, 0 0 20px rgba(56, 189, 248, 0.2) !important;
+        border-color: #ffffff !important;
+        box-shadow: none !important;
     }
     
-    /* Vibrant Hover Buttons */
-    .stButton button { 
-        background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
-        color: #ffffff; 
-        font-family: 'Outfit', sans-serif;
-        font-weight: 800; font-size: 1.25rem; border-radius: 16px; 
-        padding: 1rem 0; width: 100%; border: none; 
-        box-shadow: 0 10px 25px -5px rgba(0, 114, 255, 0.6); 
-        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        text-transform: uppercase; letter-spacing: 0.1em;
-        position: relative;
-        overflow: hidden;
+    /* Stripped Back Buttons */
+    .stButton button, .stButton button:focus { 
+        background: #ffffff !important;
+        color: #000000 !important; 
+        font-family: 'Inter', sans-serif !important;
+        font-weight: 600 !important; font-size: 1rem !important; border-radius: 0px !important; 
+        padding: 0.75rem 0 !important; width: 100% !important; border: 1px solid transparent !important; 
+        transition: background 0.1s ease !important;
+        text-transform: uppercase !important; letter-spacing: 0.02em !important;
+        outline: none !important; box-shadow: none !important;
     }
+    .stButton button p { color: #000000 !important; }
+    
     .stButton button:hover { 
-        background: linear-gradient(135deg, #0072ff 0%, #00c6ff 100%);
-        box-shadow: 0 15px 35px -5px rgba(0, 114, 255, 0.8); 
-        transform: translateY(-4px) scale(1.01); 
+        background: #f0f0f0 !important;
+        color: #000000 !important;
+        border-color: transparent !important;
     }
     .stButton button:active {
-        transform: translateY(2px);
+        background: #e0e0e0 !important;
+        color: #000000 !important;
     }
+    
+    /* Styling Streamlit defaults to be more minimal */
+    hr { margin: 1rem 0 !important; border-color: #222222 !important; }
+    
+    /* Tabs styling */
+    .stTabs [data-baseweb="tab-list"] { gap: 1.5rem; border-bottom: 1px solid #222222; }
+    .stTabs [data-baseweb="tab"] { background: transparent !important; border: none !important; color: #666666 !important; padding-left: 0; padding-right: 0; padding-bottom: 8px;}
+    .stTabs [aria-selected="true"] { color: #ffffff !important; font-weight: 600; }
+    .stTabs [data-baseweb="tab-highlight"] { background-color: #ffffff !important; height: 2px !important; }
+    
+    p, div, span, h1, h2, h3, h4, h5, h6 { font-family: 'Inter', sans-serif; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -166,100 +149,119 @@ def load_orchestrator():
     return TruthOrchestrator()
 
 # Layout
-st.markdown('<div class="title-text">TruthLens Pro</div>', unsafe_allow_html=True)
-st.markdown('<div class="subtitle-text">LLM-Driven Hybrid Fact Checker (RAG + Credibility System)</div>', unsafe_allow_html=True)
+if 'results' not in st.session_state:
+    st.session_state.results = None
+if 'claim_input_val' not in st.session_state:
+    st.session_state.claim_input_val = ""
 
 with st.spinner("Warming up Neural Engines..."):
     orchestrator = load_orchestrator()
 
-# Main input layout
-claim_input = st.text_area("Analyze Claim:", height=120, placeholder="Paste a news article snippet or claim here...")
-analyze_btn = st.button("Check Facts & Verify")
-
-if analyze_btn and claim_input:
-    # Centralized Orchestrator Call
+def perform_analysis(claim):
     with st.spinner("Running 80/20 Mathematical Ensemble..."):
-         orchestrator_res = orchestrator.analyze_claim(claim_input)
-         
-    verdict_text = orchestrator_res['verdict']
-    conf = orchestrator_res['confidence_percent']
-    source = orchestrator_res['primary_source']
-    
-    ling_res = orchestrator_res['linguistic_data']
-    rag_res = orchestrator_res['rag_matches']
-    generated_queries = orchestrator_res['web_queries_generated']
-    web_details = orchestrator_res['web_evidence']
-
-    # Final cleanup to ensure strict "True/False" or "Real/Fake" aesthetics
-    v_class = "Neutral"
-    if "True" in verdict_text or "Real" in verdict_text: 
-        v_class = "True"
-    elif "False" in verdict_text or "Fake" in verdict_text: 
-        v_class = "False"
-
-    # Present Results
-    st.markdown(f"""
-    <div class="verdict verdict-{v_class}">
-        VERDICT: {verdict_text.upper()} <span style="font-size: 1rem; color: #e2e8f0; opacity: 0.8;">({conf}% Match)</span>
-    </div>
-    <div style="text-align: center; color: #94a3b8; margin-bottom: 2rem;">Source: {source}</div>
-    """, unsafe_allow_html=True)
-
-    # Detailed Tabs
-    if not rag_res:
-        tab_verification, tab_linguistics = st.tabs(["Live Verification & Credibility", "Linguistic Analysis"])
+        st.session_state.results = orchestrator.analyze_claim(claim)
+        st.session_state.claim_input_val = claim
+    if hasattr(st, 'rerun'):
+        st.rerun()
     else:
-        tab_truth, tab_verification, tab_linguistics = st.tabs(["Ground Truth", "Live Verification & Credibility", "Linguistic Analysis"])
+        st.experimental_rerun()
+
+if st.session_state.results is None:
+    # --- CENTERED INITIAL LAYOUT ---
+    st.markdown("<div style='height: 10vh;'></div>", unsafe_allow_html=True)
+    _, center_col, _ = st.columns([1, 2, 1])
+    with center_col:
+        st.markdown('<div class="title-text" style="text-align: center;">TruthLens Pro</div>', unsafe_allow_html=True)
+        st.markdown('<div class="subtitle-text" style="text-align: center;">LLM-Driven Hybrid Fact Checker (RAG + Credibility System)</div>', unsafe_allow_html=True)
+        claim = st.text_area("Analyze Claim:", height=150, placeholder="Paste a news article snippet or claim here...")
+        if st.button("Check Facts & Verify"):
+            if claim:
+                perform_analysis(claim)
+else:
+    # --- SPLIT LAYOUT (LEFT/RIGHT) ---
+    left_col, right_col = st.columns([1, 1.6], gap="large")
+    
+    with left_col:
+        st.markdown('<div class="title-text">TruthLens Pro</div>', unsafe_allow_html=True)
+        st.markdown('<div class="subtitle-text">LLM-Driven Hybrid Fact Checker</div>', unsafe_allow_html=True)
+        claim = st.text_area("Analyze Claim:", value=st.session_state.claim_input_val, height=150)
         
-        with tab_truth:
+        if st.button("Check Facts & Verify"):
+            if claim:
+                perform_analysis(claim)
+                
+        # Results - Left Side
+        orchestrator_res = st.session_state.results
+        verdict_text = orchestrator_res['verdict']
+        conf = orchestrator_res['confidence_percent']
+        source = orchestrator_res['primary_source']
+        
+        v_class = "Neutral"
+        if "True" in verdict_text or "Real" in verdict_text: v_class = "True"
+        elif "False" in verdict_text or "Fake" in verdict_text: v_class = "False"
+        
+        st.markdown(f"""
+        <div class="verdict verdict-{v_class}">
+            VERDICT: {verdict_text.upper()}
+        </div>
+        """, unsafe_allow_html=True)
+
+    with right_col:
+        orchestrator_res = st.session_state.results
+        ling_res = orchestrator_res['linguistic_data']
+        rag_res = orchestrator_res['rag_matches']
+        web_details = orchestrator_res['web_evidence']
+        
+        st.markdown("<div style='margin-top: 1rem;'></div>", unsafe_allow_html=True)
+        
+        if not rag_res:
+            tab_verification, tab_linguistics = st.tabs(["Live Verification & Credibility", "Linguistic Analysis"])
+        else:
+            tab_truth, tab_verification, tab_linguistics = st.tabs(["Ground Truth", "Live Verification", "Linguistic Analysis"])
+            
+            with tab_truth:
+                st.markdown('<div class="card">', unsafe_allow_html=True)
+                st.subheader("Closest Dataset Matches")
+                for i, match in enumerate(rag_res):
+                    st.markdown(f"**Match {i+1}**: {match['statement']} *(Score: {match['score']:.2f})*")
+                    st.caption(f"Annotated Label: `{match['label']}`")
+                    st.divider()
+                st.markdown('</div>', unsafe_allow_html=True)
+                
+        with tab_verification:
             st.markdown('<div class="card">', unsafe_allow_html=True)
-            st.subheader("Closest Dataset Matches")
-            for i, match in enumerate(rag_res):
-                st.markdown(f"**Match {i+1}**: {match['statement']} *(Score: {match['score']:.2f})*")
-                st.caption(f"Annotated Label: `{match['label']}`")
-                st.divider()
+            st.subheader("Credibility Weighted Evidence")
+            if not web_details:
+                st.info("No verifiable web evidence found.")
+            else:
+                 sort_map = {'Supports': 0, 'Neutral': 1, 'Refutes': 2}
+                 sorted_web_details = sorted(web_details, key=lambda x: sort_map.get(x.get('relation', 'Neutral'), 1))
+                 for ev in sorted_web_details:
+                     cred = ev['credibility']
+                     icon = "[SUPPORT]" if ev['relation'] == 'Supports' else "[REFUTE]" if ev['relation'] == 'Refutes' else "[NEUTRAL]"
+                     st.markdown(f"#### {icon} [{ev['title']}]({ev['url']})")
+                     st.markdown(f"**Credibility Profiler:** Status `{cred['status']}` | Age:`{cred['age_months']} mos` | Engine Score: `{cred['credibility_score']}`")
+                     st.markdown(f"> {ev['snippet'][:300]}")
+                     st.caption(f"Amplified Weight: {ev['weight']}")
+                     st.divider()
             st.markdown('</div>', unsafe_allow_html=True)
 
-    with tab_verification:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.subheader("Credibility Weighted Evidence")
-        details = web_details
-        if not details:
-            st.info("No verifiable web evidence found.")
-        else:
-             for ev in details:
-                 cred = ev['credibility']
-                 icon = "[SUPPORT]" if ev['relation'] == 'Supports' else "[REFUTE]" if ev['relation'] == 'Refutes' else "[NEUTRAL]"
-                 
-                 st.markdown(f"#### {icon} [{ev['title']}]({ev['url']})")
-                 st.markdown(f"**Credibility Profiler:** Status `{cred['status']}` | Age:`{cred['age_months']} mos` | Engine Score: `{cred['credibility_score']}`")
-                 st.markdown(f"> {ev['snippet'][:300]}")
-                 st.caption(f"Amplified Weight: {ev['weight']}")
-                 st.divider()
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    # Removed Query Planner tab
-
-    with tab_linguistics:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.subheader("Linguistic / Sentiment Analysis")
-        st.metric("Deception/Truth Likelihood", f"{ling_res['label'].replace('_', ' ').title()}")
-        st.progress(ling_res['confidence'])
-        
-        # XAI Rendering
-        xai_words = ling_res.get('xai_words', [])
-        if xai_words:
-             st.markdown("#### 🔍 Explainable AI (SHAP Token Impact)")
-             st.write("The AI identified these specific words as having the highest mathematical impact on its deception classification:")
-             
-             tags_html = ""
-             for w in xai_words:
-                 word = w['word']
-                 # Red gradient pill for high-impact words
-                 color = "rgba(239, 68, 68, 0.2)"
-                 border = "#ef4444"
-                 tags_html += f'<span style="background: {color}; border: 1px solid {border}; padding: 6px 14px; border-radius: 16px; margin-right: 8px; font-weight: 600; font-size: 0.9rem;">{word}</span>'
-                 
-             st.markdown(f'<div style="margin: 15px 0;">{tags_html}</div>', unsafe_allow_html=True)
-             
-        st.markdown('</div>', unsafe_allow_html=True)
+        with tab_linguistics:
+            st.markdown('<div class="card">', unsafe_allow_html=True)
+            st.subheader("Linguistic / Sentiment Analysis")
+            st.metric("Deception/Truth Likelihood", f"{ling_res['label'].replace('_', ' ').title()}")
+            st.progress(ling_res['confidence'])
+            
+            xai_words = ling_res.get('xai_words', [])
+            if xai_words:
+                 st.markdown("#### 🔍 Explainable AI (SHAP Token Impact)")
+                 st.write("The AI identified these specific words as having the highest mathematical impact on its deception classification:")
+                 tags_html = ""
+                 for w in xai_words:
+                     word = w['word']
+                     color = "#FFFFFF"
+                     border = "#67568C"
+                     text_color = "#67568C"
+                     tags_html += f'<span style="background: {color}; border: 1px solid {border}; padding: 4px 12px; border-radius: 0px; margin-right: 8px; margin-bottom: 8px; display: inline-block; font-weight: 500; font-size: 0.85rem; color: {text_color};">{word}</span>'
+                 st.markdown(f'<div style="margin: 15px 0;">{tags_html}</div>', unsafe_allow_html=True)
+            st.markdown('</div>', unsafe_allow_html=True)

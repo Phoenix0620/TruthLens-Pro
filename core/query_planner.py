@@ -24,17 +24,20 @@ class QueryPlanner:
             
             # Assemble semantic queries
             if entities:
-                queries.append("fact check " + " ".join(entities))
+                queries.append(" ".join(entities) + " true or false")
             
             # Method 3: Keyword Extraction via RAKE
             self.rake.extract_keywords_from_text(claim)
             keywords = self.rake.get_ranked_phrases()
             if keywords:
-                # Top keyword chunk + fact check
-                queries.append(f"{keywords[0]} debunked or truth")
+                # If the keyword phrase has enough context, use it. Otherwise, combine it.
+                if len(keywords[0].split()) >= 2:
+                    queries.append(f"{keywords[0]} reality")
+                else:
+                    queries.append(f"{claim} explained")
                 
             # Filter distinct queries
-            filtered = list(set(q for q in queries if len(q.split()) > 2))
+            filtered = list(set(q for q in queries if len(q.split()) >= 3))
             
             # Return top 3 generated queries max
             return sorted(filtered, key=len, reverse=True)[:3]
